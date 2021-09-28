@@ -51,11 +51,60 @@ def insertion_sort(array: List[T]):
             swap(i, value_index, array)
             value_index += 1
 
+def merge(low: int, mid: int, high: int, array: List[T]):
+    i = 0
+    j = 0
+    while low + i < mid + 1 and mid + i + 1 < high:
+        if low + i >= mid + 1:
+            pass
+        elif array[low + i] > array[mid + j + 1]:
+            swap(low + i, mid + i + 1, array)
+            i += 1
+            j += 1
+        elif array[low + i] <= array[mid + j + 1]:
+            i += 1
+            # 25 7 84 60 72
+            # 25 7 84 | 60 72
+            # 25 7 | 84
+            # 25 | 7
+            # 7 25 | 84
+            # 7 25 84
+            # 
+            # 60 | 72
+            # 60 72
+            #
+            # 7 25 84 | 60 72 i++
+            # 7 25 84 | 60 72 i++
+            # 7 25 60 | 84 72 i++ j++
+            # 7 25 60 | 72 84 j++
+            #
+            # 1 4 7 2 3 9
+            # 1 4 7 | 2 3 9
+            # 1 4 | 7
+            # 1 | 4
+            #
+            # 2 3 | 9
+            # 2 | 3
+            #
+            # 1 4 7 | 2 3 9
+            # 1 2 7 | 4 3 9
+            # 1 2 3 | 4 7 9
+
 def merge_helper(low: int, high: int, array: List[T]):
-    pass
+    mid = (high + low) // 2
+    if low == mid:
+        merge(low, mid, high, array)
+    merge_helper(low, mid, array)
+    merge_helper(mid+1, high, array)
+    merge(low, mid, high, array)
 
 def merge_sort(array: List[T]):
-    pass
+    low = 0
+    high = len(array) - 1
+    mid = (low + high) // 2
+    merge_helper(low, mid, array)
+    merge_helper(mid+1, high, array)
+    merge(low, mid, high, array)
 
 def gcd(a: int, b: int) -> int:
     # check if a is inded larger or equal to b

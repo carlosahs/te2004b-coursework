@@ -45,11 +45,17 @@ def insertion_sort(array: List[T]):
     for i in range(1, len(array)):
         value = array[i]
         value_index = i
-        while array[value_index - 1] > value:
+        while array[value_index - 1] > value and value_index - 1 >= 0:
             value_index -= 1
         while value_index < i:
             swap(i, value_index, array)
             value_index += 1
+
+def merge_helper(low: int, high: int, array: List[T]):
+    pass
+
+def merge_sort(array: List[T]):
+    pass
 
 def gcd(a: int, b: int) -> int:
     # check if a is inded larger or equal to b

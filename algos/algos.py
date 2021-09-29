@@ -53,50 +53,63 @@ def insertion_sort(array: List[T]):
 
 def merge(low: int, mid: int, high: int, array: List[T]):
     i = 0
-    j = 0
-    while low + i < mid + 1 and mid + i + 1 < high:
-        if low + i >= mid + 1:
-            pass
-        elif array[low + i] > array[mid + j + 1]:
-            swap(low + i, mid + i + 1, array)
-            i += 1
+    j = 1
+    while not (i > high or j > high):
+        # 19 78 49 69 26
+        # 19 78 49 | 69 26
+        # 19 78 | 49
+        # 19 | 78
+        # 19 78 | 49 i++, *(i j) i++ j++, i > mid j > high
+        # 19 49 78 | 69 26
+        # 69 | 26
+        # 26 69
+        # 19 48 78 | 26 69 i++, *(i j) i++ j++, *(i j) *(i j-1) i++ j++, i > mid j > high
+        # 19 26 48 69 78
+        # 
+        # 40 32 45 42 67
+        # 40 32 45 | 42 67
+        # 40 32 | 45
+        # 40 | 32
+        # 32 40 | 45 i++, i++, i > mid
+        # 32 40 45 | 42 67
+        # 42 | 67
+        # 32 40 45 | 42 67 i++, i++, *(i j) i++ j++, i++, i++, i > high
+        # 32 40 42 45 67
+        low_value = array[low + i]
+        high_value = array[mid + j]
+
+        if low_value > high_value:
+            swap(low + i, mid + j, array)
+            if j > 0:
+                if array[low + i] > array[mid + j - 1]:
+                    swap(low + i, mid + j - 1, array)
             j += 1
-        elif array[low + i] <= array[mid + j + 1]:
-            i += 1
-            # 25 7 84 60 72
-            # 25 7 84 | 60 72
-            # 25 7 | 84
-            # 25 | 7
-            # 7 25 | 84
-            # 7 25 84
-            # 
-            # 60 | 72
-            # 60 72
-            #
-            # 7 25 84 | 60 72 i++
-            # 7 25 84 | 60 72 i++
-            # 7 25 60 | 84 72 i++ j++
-            # 7 25 60 | 72 84 j++
-            #
-            # 1 4 7 2 3 9
-            # 1 4 7 | 2 3 9
-            # 1 4 | 7
-            # 1 | 4
-            #
-            # 2 3 | 9
-            # 2 | 3
-            #
-            # 1 4 7 | 2 3 9
-            # 1 2 7 | 4 3 9
-            # 1 2 3 | 4 7 9
+        elif j > 0:
+            swap(low + i, mid + j - 1, array)
+        i += 1
+        # elif j == 0 and i < mid + 1:
+        #     if array[low + i] > array[mid + j + 1]:
+        #         swap(low + i, mid + j + 1, array)
+        #         j += 1
+        # elif j > 0 and i < mid + 1:
+        #     if array[low + i] > array[mid + j + 1]:
+        #         swap(low + i, mid + j + 1, array)
+        #         j += 1
+        #     else:
+        #         swap(low + i, mid + j, array)
+        # elif i >= mid + 1:
+        #     if array[mid + j] > array[mid + j + 1]:
+        #         swap(mid + j, mid + j + 1, array)
+        #         j += 1
 
 def merge_helper(low: int, high: int, array: List[T]):
     mid = (high + low) // 2
     if low == mid:
         merge(low, mid, high, array)
-    merge_helper(low, mid, array)
-    merge_helper(mid+1, high, array)
-    merge(low, mid, high, array)
+    else:
+        merge_helper(low, mid, array)
+        merge_helper(mid+1, high, array)
+        merge(low, mid, high, array)
 
 def merge_sort(array: List[T]):
     low = 0

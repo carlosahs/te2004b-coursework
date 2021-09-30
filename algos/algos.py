@@ -52,55 +52,27 @@ def insertion_sort(array: List[T]):
             value_index += 1
 
 def merge(low: int, mid: int, high: int, array: List[T]):
+    stored = array.copy()
+
     i = 0
     j = 1
-    while not (i > high or j > high):
-        # 19 78 49 69 26
-        # 19 78 49 | 69 26
-        # 19 78 | 49
-        # 19 | 78
-        # 19 78 | 49 i++, *(i j) i++ j++, i > mid j > high
-        # 19 49 78 | 69 26
-        # 69 | 26
-        # 26 69
-        # 19 48 78 | 26 69 i++, *(i j) i++ j++, *(i j) *(i j-1) i++ j++, i > mid j > high
-        # 19 26 48 69 78
-        # 
-        # 40 32 45 42 67
-        # 40 32 45 | 42 67
-        # 40 32 | 45
-        # 40 | 32
-        # 32 40 | 45 i++, i++, i > mid
-        # 32 40 45 | 42 67
-        # 42 | 67
-        # 32 40 45 | 42 67 i++, i++, *(i j) i++ j++, i++, i++, i > high
-        # 32 40 42 45 67
-        low_value = array[low + i]
-        high_value = array[mid + j]
+    k = 0
 
-        if low_value > high_value:
-            swap(low + i, mid + j, array)
-            if j > 0:
-                if array[low + i] > array[mid + j - 1]:
-                    swap(low + i, mid + j - 1, array)
+    while not (low + k > high):
+        if low + i > mid:
+            array[low + k] = stored[mid + j]
             j += 1
-        elif j > 0:
-            swap(low + i, mid + j - 1, array)
-        i += 1
-        # elif j == 0 and i < mid + 1:
-        #     if array[low + i] > array[mid + j + 1]:
-        #         swap(low + i, mid + j + 1, array)
-        #         j += 1
-        # elif j > 0 and i < mid + 1:
-        #     if array[low + i] > array[mid + j + 1]:
-        #         swap(low + i, mid + j + 1, array)
-        #         j += 1
-        #     else:
-        #         swap(low + i, mid + j, array)
-        # elif i >= mid + 1:
-        #     if array[mid + j] > array[mid + j + 1]:
-        #         swap(mid + j, mid + j + 1, array)
-        #         j += 1
+        elif mid + j > high:
+            array[low + k] = stored[low + i]
+            i += 1
+        elif stored[low + i] > stored[mid + j]:
+            array[low + k] = stored[mid + j]
+            j += 1
+        else:
+            array[low + k] = stored[low + i]
+            i += 1
+
+        k += 1
 
 def merge_helper(low: int, high: int, array: List[T]):
     mid = (high + low) // 2
